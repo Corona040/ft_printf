@@ -6,16 +6,16 @@
 /*   By: ecorona- <ecorona-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 21:27:15 by ecorona-          #+#    #+#             */
-/*   Updated: 2023/10/14 21:53:03 by ecorona-         ###   ########.fr       */
+/*   Updated: 2023/10/14 22:01:14 by ecorona-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdarg.h>
 
-int ft_printf(const char *format, ...)
+int	ft_printf(const char *format, ...)
 {
-	va_list ap;
+	va_list	ap;
 	char	c;
 	char	*s;
 	int		d;
