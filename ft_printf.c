@@ -6,14 +6,13 @@
 /*   By: ecorona- <ecorona-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 21:27:15 by ecorona-          #+#    #+#             */
-/*   Updated: 2023/10/14 23:15:00 by ecorona-         ###   ########.fr       */
+/*   Updated: 2023/10/14 23:29:21 by ecorona-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stdarg.h>
+#include "ft_printf.h"
 
-static void ft_putubase_fd(char *set, long unsigned int n, int fd)
+static void	ft_putubase_fd(char *set, long unsigned int n, int fd)
 {
 	unsigned int	base;
 
@@ -29,7 +28,7 @@ static void ft_putubase_fd(char *set, long unsigned int n, int fd)
 		ft_putchar_fd(set[n], fd);
 }
 
-static void ft_putbase_fd(char *set, long int n, int fd)
+static void	ft_putbase_fd(char *set, long int n, int fd)
 {
 	unsigned int	base;
 
@@ -121,6 +120,7 @@ int	ft_printf(const char *format, ...)
 	return (1);
 }
 
+/*
 #include <stdio.h>
 
 int	main(void)
@@ -132,3 +132,4 @@ int	main(void)
 	printf("\n%%c: %c\n%%s: %s\n%%p: %p\n%%d: %i\n%%i: %i\n", 'e', "sabedoria", &x, x, x);
 	printf("%%u: %u\n%%x: %x\n%%X: %X\n", -1, x, x);
 }
+*/

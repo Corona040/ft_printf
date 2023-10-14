@@ -8,11 +8,19 @@ CFLAGS = -Wall -Wextra -Werror
 
 LIBS = -I./libft -L./libft -lft
 
-SRCS = ft_printf.c
+SRCS =	ft_printf.c				\
+		libft/ft_strlen.c		\
+		libft/ft_strncmp.c		\
+		libft/ft_putchar_fd.c	\
+		libft/ft_putstr_fd.c	\
+		libft/ft_putnbr_fd.c
 
 OBJS = $(SRCS:.c=.o)
 
-all: $(NAME)
+all: makelib $(NAME)
+
+makelib:
+	@make -C libft
 
 $(NAME): $(OBJS)
 	ar rcs $@ $^
