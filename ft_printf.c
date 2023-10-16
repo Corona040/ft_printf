@@ -6,32 +6,40 @@
 /*   By: ecorona- <ecorona-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 21:27:15 by ecorona-          #+#    #+#             */
-/*   Updated: 2023/10/16 10:16:46 by ecorona-         ###   ########.fr       */
+/*   Updated: 2023/10/16 11:39:27 by ecorona-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static void	ft_putubase_fd(char *set, long unsigned int n, int fd)
+static int	ft_putubase_fd(char *set, long unsigned int n, int fd)
 {
 	unsigned int	base;
+	int				nb_digits;
 
+	nb_digits = 0;
 	if (!set || !*set)
 		set = "0123456789";
 	base = ft_strlen(set);
-	if (n > 15)
+	if (n >= base)
 	{
-		ft_putubase_fd(set, n / base, fd);
+		nb_digits += ft_putubase_fd(set, n / base, fd);
 		ft_putubase_fd(set, n % base, fd);
+		return (nb_digits + 1);
 	}
 	else
+	{
 		ft_putchar_fd(set[n], fd);
+		return (1);
+	}
 }
 
-static void	ft_putbase_fd(char *set, long int n, int fd)
+static int	ft_putbase_fd(char *set, long int n, int fd)
 {
 	unsigned int	base;
+	int				nb_digits;
 
+	nb_digits = 0;
 	if (!set || !*set)
 		set = "0123456789";
 	base = ft_strlen(set);
@@ -40,13 +48,35 @@ static void	ft_putbase_fd(char *set, long int n, int fd)
 		ft_putchar_fd('-', 1);
 		n = -n;
 	}
-	if (n > 15)
+	if (n >= base)
 	{
-		ft_putbase_fd(set, n / base, fd);
+		nb_digits += ft_putbase_fd(set, n / base, fd);
 		ft_putbase_fd(set, n % base, fd);
+		return (nb_digits + 1);
 	}
 	else
+	{
 		ft_putchar_fd(set[n], fd);
+		return (1);
+	}
+}
+
+static int	ft_nputstr_fd(char *s, int fd)
+{
+	int		i;
+
+	if (s)
+	{
+		i = 0;
+		while (*s)
+		{
+			ft_putchar_fd(*s++, fd);
+			i++;
+		}
+		return (i);
+	}
+	else
+		return (0);
 }
 
 int	ft_printf(const char *format, ...)
@@ -59,7 +89,9 @@ int	ft_printf(const char *format, ...)
 	unsigned int	uint;
 	char			*hex;
 	char			*HEX;
+	int				nb_chars_written;
 
+	nb_chars_written = 0;
 	hex = "0123456789abcdef";
 	HEX = "0123456789ABCDEF";
 	va_start(ap, format);
@@ -69,55 +101,60 @@ int	ft_printf(const char *format, ...)
 		{
 			c = (char) va_arg(ap, int);
 			ft_putchar_fd(c, 1);
+			nb_chars_written++;
 			format++;
 		}
 		else if (!ft_strncmp(format, "%s", 2))
 		{
 			s = va_arg(ap, char *);
-			ft_putstr_fd(s, 1);
+			nb_chars_written += ft_nputstr_fd(s, 1);
 			format++;
 		}
 		else if (!ft_strncmp(format, "%p", 2))
 		{
 			p = va_arg(ap, void *);
-			ft_putstr_fd("0x", 1);
-			ft_putubase_fd(hex, (unsigned long int) p, 1);
+			nb_chars_written += ft_nputstr_fd("0x", 1);
+			nb_chars_written += ft_putubase_fd(hex, (unsigned long int) p, 1);
 			format++;
 		}
 		else if (!ft_strncmp(format, "%d", 2) || !ft_strncmp(format, "%i", 2))
 		{
 			d = va_arg(ap, int);
-			ft_putnbr_fd(d, 1);
+			nb_chars_written += ft_putbase_fd(0, d, 1);
 			format++;
 		}
 		else if (!ft_strncmp(format, "%u", 2))
 		{
 			uint = va_arg(ap, unsigned int);
-			ft_putubase_fd(0, uint, 1);
+			nb_chars_written += ft_putubase_fd(0, uint, 1);
 			format++;
 		}
 		else if (!ft_strncmp(format, "%x", 2))
 		{
 			d = va_arg(ap, int);
-			ft_putbase_fd(hex, (long int) d, 1);
+			nb_chars_written += ft_putbase_fd(hex, (long int) d, 1);
 			format++;
 		}
 		else if (!ft_strncmp(format, "%X", 2))
 		{
 			d = va_arg(ap, int);
-			ft_putbase_fd(HEX, (long int) d, 1);
+			nb_chars_written += ft_putbase_fd(HEX, (long int) d, 1);
 			format++;
 		}
 		else if (!ft_strncmp(format, "%%", 2))
 		{
 			ft_putchar_fd('%', 1);
+			nb_chars_written++;
 			format++;
 		}
 		else
+		{
 			ft_putchar_fd(*format, 1);
+			nb_chars_written++;
+		}
 		format++;
 	}
-	return (1);
+	return (nb_chars_written);
 }
 
 /*
@@ -126,10 +163,85 @@ int	ft_printf(const char *format, ...)
 int	main(void)
 {
 	int	x = 100;
+	int	my_return;
+	int	og_return;
 
-	ft_printf("%%c: %c\n%%s: %s\n%%p: %p\n%%d: %i\n%%i: %i\n", 'e', "sabedoria", &x, x, x);
-	ft_printf("%%u: %u\n%%x: %x\n%%X: %X\n", -1, x, x);
-	printf("\n%%c: %c\n%%s: %s\n%%p: %p\n%%d: %i\n%%i: %i\n", 'e', "sabedoria", &x, x, x);
-	printf("%%u: %u\n%%x: %x\n%%X: %X\n", -1, x, x);
+	(void)x;
+	my_return = 0;
+	og_return = 0;
+	my_return += ft_printf("%c\n", '1');
+	og_return += printf("%c\n", '1');
+	printf("mr = %i\n", my_return);
+	printf("or = %i\n\n", og_return);
+
+	my_return = 0;
+	og_return = 0;
+	my_return += ft_printf("%s\n", "bananinha");
+	og_return += printf("%s\n", "bananinha");
+	printf("mr = %i\n", my_return);
+	printf("or = %i\n\n", og_return);
+
+	my_return = 0;
+	og_return = 0;
+	my_return += ft_printf("%p\n", &x);
+	og_return += printf("%p\n", &x);
+	printf("mr = %i\n", my_return);
+	printf("or = %i\n\n", og_return);
+
+	my_return = 0;
+	og_return = 0;
+	my_return += ft_printf("%d\n", x);
+	og_return += printf("%d\n", x);
+	printf("mr = %i\n", my_return);
+	printf("or = %i\n\n", og_return);
+
+	my_return = 0;
+	og_return = 0;
+	my_return += ft_printf("%i\n", x);
+	og_return += printf("%i\n", x);
+	printf("mr = %i\n", my_return);
+	printf("or = %i\n\n", og_return);
+
+	my_return = 0;
+	og_return = 0;
+	my_return += ft_printf("%u\n", x);
+	og_return += printf("%u\n", x);
+	printf("mr = %i\n", my_return);
+	printf("or = %i\n\n", og_return);
+
+	my_return = 0;
+	og_return = 0;
+	my_return += ft_printf("%x\n", x);
+	og_return += printf("%x\n", x);
+	printf("mr = %i\n", my_return);
+	printf("or = %i\n\n", og_return);
+
+	my_return = 0;
+	og_return = 0;
+	my_return += ft_printf("%X\n", x);
+	og_return += printf("%X\n", x);
+	printf("mr = %i\n", my_return);
+	printf("or = %i\n\n", og_return);
+
+	my_return = 0;
+	og_return = 0;
+	my_return += ft_printf("%%\n");
+	og_return += printf("%%\n");
+	printf("mr = %i\n", my_return);
+	printf("or = %i\n\n", og_return);
+
+	my_return = 0;
+	og_return = 0;
+	my_return += ft_printf("%i, Tartaruga deu um baile\n%d, %s\n%u, %c leao se embebedou\n4, Todo mundo provocou %s provocou\n\n&x: %p, 0x(x) = %x, 0x(x)(%%X) = %X\n", 1, 2, "A bicharada toda foi", 3, 'O', "provocou", &x, x, x);
+	og_return += printf("%i, Tartaruga deu um baile\n%d, %s\n%u, %c leao se embebedou\n4, Todo mundo provocou %s provocou\n\n&x: %p, 0x(x) = %x, 0x(x)(%%X) = %X\n", 1, 2, "A bicharada toda foi", 3, 'O', "provocou", &x, x, x);
+	printf("mr = %i\n", my_return);
+	printf("or = %i\n\n", og_return);
+
+	my_return = 0;
+	og_return = 0;
+	my_return += ft_printf(" NULL %s NULL ", NULL);
+	//og_return += printf(" NULL %s NULL ", NULL);
+	printf("mr = %i\n", my_return);
+	printf("or = %i\n\n", og_return);
 }
 */
