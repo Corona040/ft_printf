@@ -6,7 +6,7 @@ CC = cc
 
 CFLAGS = -Wall -Wextra -Werror
 
-LIBS = -I./libft -L./libft -lft
+LIBS = -I./libft #-L./libft -lft
 
 SRCS =	ft_printf.c				\
 		libft/ft_strlen.c		\
