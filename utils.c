@@ -1,46 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ecorona- <ecorona-@student.42porto.co      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/17 10:24:47 by ecorona-          #+#    #+#             */
-/*   Updated: 2023/10/17 10:57:54 by ecorona-         ###   ########.fr       */
+/*   Created: 2023/10/17 10:44:42 by ecorona-          #+#    #+#             */
+/*   Updated: 2023/10/17 10:57:55 by ecorona-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_printf(const char *format, ...)
+int	ft_putubase_fd(char *set, long unsigned int n, int fd)
 {
-	int		fd;
-	va_list	ap;
-	char	*types;
+	unsigned int	base;
+	int				nb_digits;
 
-	fd = 1;
-	types = "cspdiuxX%";
-	va_start(ap, format);
-	while (*format)
+	nb_digits = 0;
+	if (!set || !*set)
+		set = "0123456789";
+	base = ft_strlen(set);
+	if (n >= base)
 	{
-		if (*format == '%')
-		{
-			while (*(types + i) && *(types + i) != format)
-			{
-				i++;
-			}
-		}
-		ft_putchar_fd(*format++, fd);
+		nb_digits += ft_putubase_fd(set, n / base, fd);
+		ft_putubase_fd(set, n % base, fd);
+		return (nb_digits + 1);
 	}
-}
-
-int	main(void)
-{
-	t_data	data;
-	t_flist	flist;
-
-	data.i = 100;
-	flist.d = data;
-	flist.f = &ft_putnbr_fd;
-	flist.f((flist.d).i, 1);
+	else
+	{
+		ft_putchar_fd(set[n], fd);
+		return (1);
+	}
 }
