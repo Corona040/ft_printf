@@ -6,41 +6,65 @@
 /*   By: ecorona- <ecorona-@student.42porto.co      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 10:24:47 by ecorona-          #+#    #+#             */
-/*   Updated: 2023/10/17 10:57:54 by ecorona-         ###   ########.fr       */
+/*   Updated: 2023/10/18 12:32:12 by ecorona-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
+static int	get_type(const char **f)
+{
+	if (f && *f)
+	{
+		if (**f == '%')
+		{
+			(*f)++;
+			if (**f == 'c' || **f == 'd' || **f == 'i'
+					|| **f == 'u' || **f == 'x' || **f == 'X')
+			{
+				(*f)++;
+				return (1);
+			}
+			else if (**f == 's' || **f == 'p')
+			{
+				(*f)++;
+				return (2);
+			}
+			else
+				return (-2);
+		}
+		else
+		{
+			(*f)++;
+			return (0);
+		}
+	}
+	else
+		return (-1);
+}
+
+
 int	ft_printf(const char *format, ...)
 {
 	int		fd;
+	t_data	data;
 	va_list	ap;
-	char	*types;
 
 	fd = 1;
-	types = "cspdiuxX%";
 	va_start(ap, format);
 	while (*format)
 	{
-		if (*format == '%')
-		{
-			while (*(types + i) && *(types + i) != format)
-			{
-				i++;
-			}
-		}
-		ft_putchar_fd(*format++, fd);
+		if (get_type(&format) == 1)
+			data.u = va_arg(ap, unsigned int);
+		else if (get_type(&format) == 2)
+			data.lu = va_arg(ap, unsigned long int);
 	}
+	return (0);
 }
 
 int	main(void)
 {
 	t_data	data;
-	t_flist	flist;
 
-	data.i = 100;
-	flist.d = data;
-	flist.f = &ft_putnbr_fd;
-	flist.f((flist.d).i, 1);
+	data.u = 100;
 }

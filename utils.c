@@ -6,13 +6,13 @@
 /*   By: ecorona- <ecorona-@student.42porto.co      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 10:44:42 by ecorona-          #+#    #+#             */
-/*   Updated: 2023/10/17 10:57:55 by ecorona-         ###   ########.fr       */
+/*   Updated: 2023/10/18 11:14:38 by ecorona-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_putubase_fd(char *set, long unsigned int n, int fd)
+void	ft_putubase_fd(char *set, long unsigned int n, int fd)
 {
 	unsigned int	base;
 	int				nb_digits;
@@ -25,11 +25,11 @@ int	ft_putubase_fd(char *set, long unsigned int n, int fd)
 	{
 		nb_digits += ft_putubase_fd(set, n / base, fd);
 		ft_putubase_fd(set, n % base, fd);
-		return (nb_digits + 1);
+		//return (nb_digits + 1);
 	}
 	else
 	{
 		ft_putchar_fd(set[n], fd);
-		return (1);
+		//return (1);
 	}
 }
