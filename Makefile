@@ -9,6 +9,7 @@ CFLAGS = -Wall -Wextra -Werror
 LIBS = -I./libft #-L./libft -lft
 
 SRCS =	ft_printf.c				\
+		utils.c					\
 		libft/ft_strlen.c		\
 		libft/ft_strncmp.c		\
 		libft/ft_putchar_fd.c	\
