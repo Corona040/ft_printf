@@ -38,7 +38,7 @@ fclean: clean
 re: fclean all
 
 $(OUT): $(SRCS) $(BONUS_SRCS)
-	$(CC) $(CFLAGS) -o $@ $(SRCS) $(BONUS_SRCS) $(LIBS)
+	$(CC) $(SRCS) $(BONUS_SRCS) $(LIBS) -o $@
 
 test: $(OUT)
 

@@ -6,7 +6,7 @@
 /*   By: ecorona- <ecorona-@student.42porto.co      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/19 17:02:24 by ecorona-          #+#    #+#             */
-/*   Updated: 2023/10/19 17:57:33 by ecorona-         ###   ########.fr       */
+/*   Updated: 2023/10/23 18:45:43 by ecorona-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,32 +26,48 @@ int	ft_printf(const char *format, ...)
 
 int	ft_print_fd(const char *format, va_list argp, int fd)
 {
-	/*
-	t_placeholder	placeholders[] =
-	{
-		{"%c", &ft_printc_fd},
-		{"%s", &ft_prints_fd},
-		0
-	};
-	*/
 	t_placeholder	**escape;
 
-	t_placeholder	c = {"%c", &ft_printc_fd};
-	t_placeholder	s = {"%s", &ft_prints_fd};
-	t_placeholder	*placeholders[3];
-	placeholders[0] = &c;
-	placeholders[1] = &s;
-	placeholders[2] = 0;
+	t_placeholder	c = {'c', &ft_printc_fd};
+	t_placeholder	s = {'s', &ft_prints_fd};
+	t_placeholder	p = {'p', &ft_printp_fd};
+	t_placeholder	d = {'d', &ft_printi_fd};
+	t_placeholder	i = {'i', &ft_printi_fd};
+	/*
+	t_placeholder	u = {'u', &ft_printu_fd};
+	t_placeholder	x = {'x', &ft_printx_fd};
+	t_placeholder	X = {'X', &ft_printX_fd};
+	t_placeholder	% = {'%', &ft_print%_fd};
+	*/
+
+	t_placeholder	*placeholders[] =
+	{
+		&c,
+		&s,
+		&p,
+		&d,
+		&i,
+		/*
+		&u,
+		&x,
+		&X,
+		&%,
+		*/
+		0
+	};
 
 	while (*format)
 	{
 		escape = placeholders;
-		while (*escape && ft_strncmp(format, (*escape)->placeholder, 2))
-			escape++;
-		if (*escape)
+		if (*format == '%')
 		{
-			((*escape)->f)(argp, fd);
 			format++;
+			while (*escape && *format != (*escape)->placeholder)
+				escape++;
+			if (*escape)
+				((*escape)->f)(argp, fd);
+			else
+				ft_putchar_fd(*(--format), fd);
 		}
 		else
 			ft_putchar_fd(*format, fd);
@@ -60,7 +76,11 @@ int	ft_print_fd(const char *format, va_list argp, int fd)
 	return (1);
 }
 
+#include <stdio.h>
 int	main(void)
 {
-	ft_printf("%canana %s", 'B', "amarela");
+	char	*str = "erde";
+
+	ft_printf("%canana %s\n%p\n%i\n%d\n", 'B', str, str, 7, -10);
+	printf("%canana %s\n%p\n%i\n%d\n", 'B', str, str, 7, -10);
 }
