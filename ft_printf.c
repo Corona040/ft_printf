@@ -6,7 +6,7 @@
 /*   By: ecorona- <ecorona-@student.42porto.co      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/19 17:02:24 by ecorona-          #+#    #+#             */
-/*   Updated: 2023/10/23 18:45:43 by ecorona-         ###   ########.fr       */
+/*   Updated: 2023/11/03 10:59:45 by ecorona-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,73 +14,74 @@
 
 int	ft_printf(const char *format, ...)
 {
-	va_list argp;
-	int		fd;
+	va_list	argp;
+	int		result;
 
 	va_start(argp, format);
-	fd = 1;
-	ft_print_fd(format, argp, fd);
+	result = ft_printf_fd(format, argp, 1);
 	va_end(argp);
-	return (1);
+	return (result);
 }
 
-int	ft_print_fd(const char *format, va_list argp, int fd)
+int	ft_printf_fd(const char *format, va_list argp, int fd)
 {
-	t_placeholder	**escape;
+	int	result;
 
-	t_placeholder	c = {'c', &ft_printc_fd};
-	t_placeholder	s = {'s', &ft_prints_fd};
-	t_placeholder	p = {'p', &ft_printp_fd};
-	t_placeholder	d = {'d', &ft_printi_fd};
-	t_placeholder	i = {'i', &ft_printi_fd};
-	/*
-	t_placeholder	u = {'u', &ft_printu_fd};
-	t_placeholder	x = {'x', &ft_printx_fd};
-	t_placeholder	X = {'X', &ft_printX_fd};
-	t_placeholder	% = {'%', &ft_print%_fd};
-	*/
-
-	t_placeholder	*placeholders[] =
-	{
-		&c,
-		&s,
-		&p,
-		&d,
-		&i,
-		/*
-		&u,
-		&x,
-		&X,
-		&%,
-		*/
-		0
-	};
-
+	result = 0;
 	while (*format)
 	{
-		escape = placeholders;
 		if (*format == '%')
 		{
 			format++;
-			while (*escape && *format != (*escape)->placeholder)
-				escape++;
-			if (*escape)
-				((*escape)->f)(argp, fd);
-			else
-				ft_putchar_fd(*(--format), fd);
+			result += ft_call_print(&format, argp, fd);
 		}
 		else
-			ft_putchar_fd(*format, fd);
+		{
+			ft_putchar_fd(*format, 1);
+			result += 1;
+		}
 		format++;
 	}
-	return (1);
+	return (result);
 }
 
+int	ft_call_print(const char **format, va_list argp, int fd)
+{
+	if (**format == 'c')
+		return (ft_printc_fd(argp, fd));
+	else if (**format == 's')
+		return (ft_prints_fd(argp, fd));
+	else if (**format == 'p')
+		return (ft_printp_fd(argp, fd));
+	else if (**format == 'i' || **format == 'd')
+		return (ft_printi_fd(argp, fd));
+	else if (**format == 'u')
+		return (ft_printu_fd(argp, fd));
+	else if (**format == 'x')
+		return (ft_printx_fd(argp, fd));
+	else if (**format == 'X')
+		return (ft_printbigx_fd(argp, fd));
+	else if (**format == '%')
+	{
+		ft_putchar_fd(**format, 1);
+		return (1);
+	}
+	else
+	{
+		(*format)--;
+		return (0);
+	}
+	return (-1);
+}
+
+/*
 #include <stdio.h>
 int	main(void)
 {
 	char	*str = "erde";
 
-	ft_printf("%canana %s\n%p\n%i\n%d\n", 'B', str, str, 7, -10);
-	printf("%canana %s\n%p\n%i\n%d\n", 'B', str, str, 7, -10);
+	//ft_printf("return = %i\n\n\n", ft_printf("%canana %s\n%p\n%i\n%d\n", 'B', str, str, 7, -10));
+	ft_printf("return = %i\n\n\n", ft_printf("%p\n", (void *) 16));
+	printf("return = %i\n\n\n", printf("%p\n", (void *) 16));
 }
+*/

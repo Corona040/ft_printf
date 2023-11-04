@@ -6,7 +6,7 @@
 /*   By: ecorona- <ecorona-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 23:18:42 by ecorona-          #+#    #+#             */
-/*   Updated: 2023/10/20 11:06:25 by ecorona-         ###   ########.fr       */
+/*   Updated: 2023/11/03 13:42:31 by ecorona-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,22 @@
 # include "libft.h"
 # include <stdarg.h>
 
-typedef struct s_placeholder
-{
-	char	placeholder;
-	int		(*f)(va_list, int);
-}	t_placeholder;
-
-typedef union u_nbr
-{
-	int					i;
-	unsigned int		u;
-	long unsigned int	p;
-}	t_nbr;
-
-int	ft_printf(const char *format, ...);
-int	ft_putbase_fd(char *set, t_nbr n, int fd);
-int	ft_printc_fd(va_list argp, int fd);
-int	ft_prints_fd(va_list argp, int fd);
-int	ft_printp_fd(va_list argp, int fd);
-int	ft_printi_fd(va_list argp, int fd);
-int	ft_print_fd(const char *format, va_list argp, int fd);
+int		ft_printf(const char *format, ...);
+int		ft_printf_fd(const char *format, va_list argp, int fd);
+int		ft_call_print(const char **format, va_list argp, int fd);
+size_t	ft_nbrlen_fd(int n);
+size_t	ft_unbrlen_fd(int n);
+size_t	ft_hexlen_fd(unsigned int n);
+size_t	ft_plen_fd(long unsigned int n);
+void	ft_putunbr_fd(unsigned int n, int fd);
+int		ft_puthex_fd(int upper, unsigned int n, int fd);
+int		ft_putp_fd(unsigned long int n, int fd);
+int		ft_printc_fd(va_list argp, int fd);
+int		ft_prints_fd(va_list argp, int fd);
+int		ft_printp_fd(va_list argp, int fd);
+int		ft_printi_fd(va_list argp, int fd);
+int		ft_printu_fd(va_list argp, int fd);
+int		ft_printx_fd(va_list argp, int fd);
+int		ft_printbigx_fd(va_list argp, int fd);
 
 #endif
