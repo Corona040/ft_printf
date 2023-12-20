@@ -6,7 +6,7 @@
 /*   By: ecorona- <ecorona-@student.42porto.co      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/19 17:02:24 by ecorona-          #+#    #+#             */
-/*   Updated: 2023/11/03 10:59:45 by ecorona-         ###   ########.fr       */
+/*   Updated: 2023/12/20 13:54:51 by ecorona-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,15 +73,3 @@ int	ft_call_print(const char **format, va_list argp, int fd)
 	}
 	return (-1);
 }
-
-/*
-#include <stdio.h>
-int	main(void)
-{
-	char	*str = "erde";
-
-	//ft_printf("return = %i\n\n\n", ft_printf("%canana %s\n%p\n%i\n%d\n", 'B', str, str, 7, -10));
-	ft_printf("return = %i\n\n\n", ft_printf("%p\n", (void *) 16));
-	printf("return = %i\n\n\n", printf("%p\n", (void *) 16));
-}
-*/

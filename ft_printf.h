@@ -6,7 +6,7 @@
 /*   By: ecorona- <ecorona-@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 23:18:42 by ecorona-          #+#    #+#             */
-/*   Updated: 2023/11/03 13:42:31 by ecorona-         ###   ########.fr       */
+/*   Updated: 2023/12/20 13:58:05 by ecorona-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 int		ft_printf(const char *format, ...);
 int		ft_printf_fd(const char *format, va_list argp, int fd);
 int		ft_call_print(const char **format, va_list argp, int fd);
-size_t	ft_nbrlen_fd(int n);
-size_t	ft_unbrlen_fd(int n);
-size_t	ft_hexlen_fd(unsigned int n);
-size_t	ft_plen_fd(long unsigned int n);
+size_t	ft_nbrlen(int n);
+size_t	ft_unbrlen(unsigned int n);
+size_t	ft_hexlen(unsigned int n);
+size_t	ft_plen(long unsigned int n);
 void	ft_putunbr_fd(unsigned int n, int fd);
 int		ft_puthex_fd(int upper, unsigned int n, int fd);
 int		ft_putp_fd(unsigned long int n, int fd);
