@@ -6,17 +6,12 @@ CC = cc
 
 CFLAGS = -Wall -Wextra -Werror
 
-LIBS = -I./libft
+INCLUDE = -Ilibft
 
 SRCS =	ft_printf.c				\
 		utils.c					\
 		utils2.c				\
-		utils3.c				\
-		libft/ft_strlen.c		\
-		libft/ft_strncmp.c		\
-		libft/ft_putchar_fd.c	\
-		libft/ft_putstr_fd.c	\
-		libft/ft_putnbr_fd.c
+		utils3.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -26,16 +21,19 @@ makelib:
 	@make -C libft
 
 $(NAME): makelib $(OBJS)
+	cp libft/libft.a $@
 	ar rcs $@ $(OBJS)
 
 %.o: %.c
-	$(CC) -c $(CFLAGS) $(LIBS) $< -o $@
+	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
 
 clean:
 	rm -f $(OBJS) $(OBJS_BONUS)
+	@make clean -C libft
 
 fclean: clean
 	rm -f $(NAME)
+	@make fclean -C libft
 
 re: fclean all
 
